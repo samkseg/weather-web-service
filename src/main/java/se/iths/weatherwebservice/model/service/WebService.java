@@ -8,6 +8,9 @@ import se.iths.weatherwebservice.model.smhi.SmhiWeather;
 import se.iths.weatherwebservice.model.wa.WaWeather;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class WebService {
@@ -68,7 +71,15 @@ public class WebService {
 
     public Integer getNextDayTemperature(WaWeather waWeather) {
         Integer hour = LocalTime.now().getHour();
-        System.out.println(hour);
         return Math.toIntExact(waWeather.getForecast().getForecastday().get(1).getHour().get(hour).getTempC().intValue());
+    }
+
+    public Integer getNextDayTemperature(SmhiWeather smhiWeather, MetWeather metWeather, WaWeather waWeather){
+        Integer hour = LocalTime.now().getHour();
+        List<Integer> list = new ArrayList<>();
+        list.add(Math.toIntExact(smhiWeather.getTimeSeries().get(24).getParameters().get(10).getValues().get(0)));
+        list.add(Math.toIntExact(metWeather.getProperties().getTimeseries().get(25).getData().getInstant().getDetails().getAirTemperature().intValue()));
+        list.add(Math.toIntExact(waWeather.getForecast().getForecastday().get(1).getHour().get(hour).getTempC().intValue()));
+        return Collections.max(list).intValue();
     }
 }
