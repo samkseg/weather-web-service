@@ -47,10 +47,13 @@ public class WebService {
         return LocalTime.parse(LocalTime.now().toString()).truncatedTo( ChronoUnit.HOURS).toString();
     }
 
-    public Forecast getForecast() {
+    public String getTimeStamp() {
         String date = LocalDate.now().toString();
         String time = LocalTime.parse(LocalTime.now().toString()).truncatedTo( ChronoUnit.MINUTES).toString();
+        return date + " " + time;
+    }
 
+    public Forecast getForecast() {
         Double dSmhi = smhiDAO.getNextDayTemperature();
         Double dMet = metDAO.getNextDayTemperature();
         Double dWa = waDAO.getNextDayTemperature();
@@ -58,7 +61,7 @@ public class WebService {
         Double highestTemp = Collections.max(List.of(dSmhi, dMet, dWa));
         String source = "";
         double humidity = 0.0;
-        String timestamp = date + " " + time;
+        String timestamp = getTimeStamp();
 
         if (highestTemp.equals(dWa)) {
             source = "WeatherAPI.com";
