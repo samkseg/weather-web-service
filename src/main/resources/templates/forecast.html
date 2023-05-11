@@ -5,10 +5,13 @@
     <title>Weather Web Service</title>
 </head>
 <body>
-<b>Forecast Liljeholmen </b><b th:text="${date}"></b> <b th:text="${time}"></b></br>
+<b>Weather Forecast Liljeholmen </b></br><b th:text="${date}"></b> <b th:text="${time}"></b></br>
 </br>
-Temperature: <b th:text="${temp}"></b>°</br>
-Humidity: <b th:text="${humid}"></b>%</br>
+<div th:object="${forecast}"><b>
+    From: <span th:text="${forecast.getOrigin()}"></span></br>
+    Temperature: <span th:text="${forecast.getTemp()}"></span>°</br>
+    Humidity: <span th:text="${forecast.getHumidity()}"></span>%</br></b>
+</div>
 <a href="/">Back</a></br>
 </body>
 </html>
