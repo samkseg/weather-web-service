@@ -15,8 +15,8 @@ public class WebController {
     @GetMapping("/forecast")
     public String getForecast(Model model) {
         model.addAttribute("forecast", webService.getForecast());
-        model.addAttribute("date", webService.getDate());
-        model.addAttribute("time", webService.getTime());
+        model.addAttribute("date", webService.getForecastDate());
+        model.addAttribute("time", webService.getForecastTime());
         return "forecast";
     }
 }

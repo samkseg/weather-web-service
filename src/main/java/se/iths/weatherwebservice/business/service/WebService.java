@@ -10,7 +10,6 @@ import se.iths.weatherwebservice.business.model.smhi.SmhiWeather;
 import se.iths.weatherwebservice.business.model.wa.WaWeather;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -42,19 +41,18 @@ public class WebService {
         return Math.round(list.stream().mapToDouble((x) -> x).summaryStatistics().getAverage() * 10) / 10.0;
     }
 
-    public String getDate() {;
+    public String getForecastDate() {
         return LocalDate.now().plusDays(1).toString();
     }
 
-    public String getTime() {
+    public String getForecastTime() {
         return LocalTime.parse(LocalTime.now().toString()).truncatedTo( ChronoUnit.HOURS).toString();
     }
 
     public Forecast getForecast() {
         Integer hour = LocalTime.now().getHour();
-        String date = LocalDate.now().plusDays(1).toString();
+        String date = LocalDate.now().toString();
         String time = LocalTime.parse(LocalTime.now().toString()).truncatedTo( ChronoUnit.MINUTES).toString();
-
 
         SmhiWeather smhiWeather = smhiDAO.getSmhiWeather();
         MetWeather metWeather = metDAO.getMetWeather();

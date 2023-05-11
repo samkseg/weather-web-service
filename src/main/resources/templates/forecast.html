@@ -8,10 +8,11 @@
 <b>Weather Forecast Liljeholmen </b></br><b th:text="${date}"></b> <b th:text="${time}"></b></br>
 </br>
 <div th:object="${forecast}"><b>
-    From: <span th:text="${forecast.getOrigin()}"></span></br>
     Temperature: <span th:text="${forecast.getTemp()}"></span>°</br>
-    Humidity: <span th:text="${forecast.getHumidity()}"></span>%</br></b>
-</div>
+    Humidity: <span th:text="${forecast.getHumidity()}"></span>%</br>
+    From: <span th:text="${forecast.getOrigin()}"></span></br>
+    Timestamp: <span th:text="${forecast.getTimestamp()}"></span></b>
+</div></br>
 <a href="/">Back</a></br>
 </body>
 </html>
