@@ -1,11 +1,16 @@
 package se.iths.weatherwebservice.business.service;
 
 import org.springframework.stereotype.Service;
+import se.iths.weatherwebservice.business.model.Forecast;
 import se.iths.weatherwebservice.business.model.dao.MetDAO;
 import se.iths.weatherwebservice.business.model.dao.SmhiDAO;
 import se.iths.weatherwebservice.business.model.dao.WaDAO;
+import se.iths.weatherwebservice.business.model.met.MetWeather;
+import se.iths.weatherwebservice.business.model.smhi.SmhiWeather;
+import se.iths.weatherwebservice.business.model.wa.WaWeather;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -19,12 +24,12 @@ public class WebService {
     MetDAO metDAO = new MetDAO();
     WaDAO waDAO = new WaDAO();
 
-    public Integer getNextDayTemperature(){
+    public Double getNextDayTemperature(){
         Integer hour = LocalTime.now().getHour();
-        List<Integer> list = new ArrayList<>();
-        list.add(Math.toIntExact(smhiDAO.getSmhiWeather().getTimeSeries().get(24).getParameters().get(1).getValues().get(0)));
-        list.add(Math.toIntExact(metDAO.getMetWeather().getProperties().getTimeseries().get(25).getData().getInstant().getDetails().getAirTemperature().intValue()));
-        list.add(Math.toIntExact(waDAO.getWaWeather().getForecast().getForecastday().get(1).getHour().get(hour).getTempC().intValue()));
+        List<Double> list = new ArrayList<>();
+        list.add(smhiDAO.getSmhiWeather().getTimeSeries().get(24).getParameters().get(1).getValues().get(0).doubleValue());
+        list.add(metDAO.getMetWeather().getProperties().getTimeseries().get(25).getData().getInstant().getDetails().getAirTemperature().doubleValue());
+        list.add(waDAO.getWaWeather().getForecast().getForecastday().get(1).getHour().get(hour).getTempC().doubleValue());
         return Collections.max(list);
     }
 
@@ -37,12 +42,45 @@ public class WebService {
         return Math.round(list.stream().mapToDouble((x) -> x).summaryStatistics().getAverage() * 10) / 10.0;
     }
 
-    public String getDate() {
-        String date = LocalDate.now().plusDays(1).toString();
-        return date;
+    public String getDate() {;
+        return LocalDate.now().plusDays(1).toString();
     }
 
     public String getTime() {
         return LocalTime.parse(LocalTime.now().toString()).truncatedTo( ChronoUnit.HOURS).toString();
+    }
+
+    public Forecast getForecast() {
+        Integer hour = LocalTime.now().getHour();
+        String date = LocalDate.now().plusDays(1).toString();
+        String time = LocalTime.parse(LocalTime.now().toString()).truncatedTo( ChronoUnit.MINUTES).toString();
+
+
+        SmhiWeather smhiWeather = smhiDAO.getSmhiWeather();
+        MetWeather metWeather = metDAO.getMetWeather();
+        WaWeather waWeather = waDAO.getWaWeather();
+
+        Double dSmhi = smhiWeather.getTimeSeries().get(24).getParameters().get(1).getValues().get(0).doubleValue();
+        Double dMet = metWeather.getProperties().getTimeseries().get(25).getData().getInstant().getDetails().getAirTemperature().doubleValue();
+        Double dWa = waWeather.getForecast().getForecastday().get(1).getHour().get(hour).getTempC().doubleValue();
+
+        Double highestTemp = Collections.max(List.of(dSmhi, dMet, dWa));
+        String source = "";
+        Double humidity = 0.0;
+        String timestamp = date + " " + time;
+
+        if (highestTemp == dSmhi) {
+            source = "SMHI.se";
+            humidity = smhiWeather.getTimeSeries().get(24).getParameters().get(5).getValues().get(0).doubleValue();
+        }
+        if (highestTemp == dMet) {
+            source = "MET.no";
+            humidity = metWeather.getProperties().getTimeseries().get(25).getData().getInstant().getDetails().getRelativeHumidity().doubleValue();
+        }
+        if (highestTemp == dWa) {
+            source = "WeatherAPI.com";
+            humidity = waWeather.getForecast().getForecastday().get(1).getHour().get(hour).getHumidity().doubleValue();
+        }
+        return new Forecast(source, highestTemp, humidity, timestamp);
     }
 }
