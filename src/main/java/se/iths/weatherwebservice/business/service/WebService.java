@@ -5,9 +5,6 @@ import se.iths.weatherwebservice.business.model.Forecast;
 import se.iths.weatherwebservice.business.model.dao.MetDAO;
 import se.iths.weatherwebservice.business.model.dao.SmhiDAO;
 import se.iths.weatherwebservice.business.model.dao.WaDAO;
-import se.iths.weatherwebservice.business.model.met.MetWeather;
-import se.iths.weatherwebservice.business.model.smhi.SmhiWeather;
-import se.iths.weatherwebservice.business.model.wa.WaWeather;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
