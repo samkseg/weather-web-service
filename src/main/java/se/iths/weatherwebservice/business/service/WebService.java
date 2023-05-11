@@ -64,20 +64,20 @@ public class WebService {
 
         Double highestTemp = Collections.max(List.of(dSmhi, dMet, dWa));
         String source = "";
-        Double humidity = 0.0;
+        double humidity = 0.0;
         String timestamp = date + " " + time;
 
-        if (highestTemp == dSmhi) {
-            source = "SMHI.se";
-            humidity = smhiWeather.getTimeSeries().get(24).getParameters().get(5).getValues().get(0).doubleValue();
+        if (highestTemp.equals(dWa)) {
+            source = "WeatherAPI.com";
+            humidity = waWeather.getForecast().getForecastday().get(1).getHour().get(hour).getHumidity().doubleValue();
         }
-        if (highestTemp == dMet) {
+        if (highestTemp.equals(dMet)) {
             source = "MET.no";
             humidity = metWeather.getProperties().getTimeseries().get(25).getData().getInstant().getDetails().getRelativeHumidity().doubleValue();
         }
-        if (highestTemp == dWa) {
-            source = "WeatherAPI.com";
-            humidity = waWeather.getForecast().getForecastday().get(1).getHour().get(hour).getHumidity().doubleValue();
+        if (highestTemp.equals(dSmhi)) {
+            source = "SMHI.se";
+            humidity = smhiWeather.getTimeSeries().get(24).getParameters().get(5).getValues().get(0).doubleValue();
         }
         return new Forecast(source, highestTemp, humidity, timestamp);
     }
