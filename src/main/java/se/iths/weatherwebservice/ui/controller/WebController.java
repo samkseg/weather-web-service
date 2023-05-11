@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import se.iths.weatherwebservice.model.met.MetWeather;
-import se.iths.weatherwebservice.model.service.WebService;
-import se.iths.weatherwebservice.model.smhi.SmhiWeather;
-import se.iths.weatherwebservice.model.wa.WaWeather;
+import se.iths.weatherwebservice.business.service.WebService;
 
 @Controller
 public class WebController {
@@ -17,11 +14,10 @@ public class WebController {
 
     @GetMapping("/forecast")
     public String getForecast(Model model) {
-        SmhiWeather smhiWeather = webService.getSmhiWeather();
-        MetWeather metWeather = webService.getMetWeather();
-        WaWeather waWeather = webService.getWaWeather();
-        model.addAttribute("temp", webService.getNextDayTemperature(smhiWeather, metWeather, waWeather));
-
+        model.addAttribute("date", webService.getDate());
+        model.addAttribute("time", webService.getTime());
+        model.addAttribute("temp", webService.getNextDayTemperature());
+        model.addAttribute("humid", webService.getNextDayHumidity());
         return "forecast";
     }
 }

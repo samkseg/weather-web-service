@@ -5,9 +5,10 @@
     <title>Weather Web Service</title>
 </head>
 <body>
-<b>Forecast Liljeholmen</b>
+<b>Forecast Liljeholmen </b><b th:text="${date}"></b> <b th:text="${time}"></b></br>
 </br>
 Temperature: <b th:text="${temp}"></b>°</br>
+Humidity: <b th:text="${humid}"></b>%</br>
 <a href="/">Back</a></br>
 </body>
 </html>
