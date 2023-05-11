@@ -6,7 +6,6 @@ import se.iths.weatherwebservice.business.model.dao.SmhiDAO;
 import se.iths.weatherwebservice.business.model.dao.WaDAO;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -26,7 +25,6 @@ public class WebService {
         list.add(Math.toIntExact(smhiDAO.getSmhiWeather().getTimeSeries().get(24).getParameters().get(1).getValues().get(0)));
         list.add(Math.toIntExact(metDAO.getMetWeather().getProperties().getTimeseries().get(25).getData().getInstant().getDetails().getAirTemperature().intValue()));
         list.add(Math.toIntExact(waDAO.getWaWeather().getForecast().getForecastday().get(1).getHour().get(hour).getTempC().intValue()));
-        System.out.println(list);
         return Collections.max(list);
     }
 
@@ -36,7 +34,6 @@ public class WebService {
         list.add(smhiDAO.getSmhiWeather().getTimeSeries().get(24).getParameters().get(5).getValues().get(0).doubleValue());
         list.add(metDAO.getMetWeather().getProperties().getTimeseries().get(25).getData().getInstant().getDetails().getRelativeHumidity().doubleValue());
         list.add(waDAO.getWaWeather().getForecast().getForecastday().get(1).getHour().get(hour).getHumidity().doubleValue());
-        System.out.println(list);
         return Math.round(list.stream().mapToDouble((x) -> x).summaryStatistics().getAverage() * 10) / 10.0;
     }
 
