@@ -4,6 +4,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import se.iths.weatherwebservice.business.model.wa.WaWeather;
 
+import java.time.LocalTime;
+
 public class WaDAO {
     static WebClient client = WebClient.create();
     public WaWeather getWaWeather() {
@@ -19,5 +21,15 @@ public class WaDAO {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public Double getNextDayTemperature() {
+        Integer hour = LocalTime.now().getHour();
+        return getWaWeather().getForecast().getForecastday().get(1).getHour().get(hour).getTempC().doubleValue();
+    }
+
+    public Double getNextDayHumidity() {
+        Integer hour = LocalTime.now().getHour();
+        return getWaWeather().getForecast().getForecastday().get(1).getHour().get(hour).getHumidity().doubleValue();
     }
 }

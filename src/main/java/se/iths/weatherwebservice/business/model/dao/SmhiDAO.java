@@ -20,4 +20,12 @@ public class SmhiDAO {
             return null;
         }
     }
+
+    public Double getNextDayTemperature() {
+        return getSmhiWeather().getTimeSeries().get(24).getParameters().get(1).getValues().get(0).doubleValue();
+    }
+
+    public Double getNextDayHumidity() {
+        return getSmhiWeather().getTimeSeries().get(24).getParameters().get(5).getValues().get(0).doubleValue();
+    }
 }

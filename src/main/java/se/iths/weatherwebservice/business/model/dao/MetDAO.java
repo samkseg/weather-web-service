@@ -21,4 +21,11 @@ public class MetDAO {
         }
     }
 
+    public Double getNextDayTemperature() {
+        return getMetWeather().getProperties().getTimeseries().get(25).getData().getInstant().getDetails().getAirTemperature().doubleValue();
+    }
+
+    public Double getNextDayHumidity() {
+        return getMetWeather().getProperties().getTimeseries().get(25).getData().getInstant().getDetails().getRelativeHumidity().doubleValue();
+    }
 }

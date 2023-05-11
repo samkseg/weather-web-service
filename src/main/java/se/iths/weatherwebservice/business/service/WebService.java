@@ -24,20 +24,18 @@ public class WebService {
     WaDAO waDAO = new WaDAO();
 
     public Double getNextDayTemperature(){
-        Integer hour = LocalTime.now().getHour();
         List<Double> list = new ArrayList<>();
-        list.add(smhiDAO.getSmhiWeather().getTimeSeries().get(24).getParameters().get(1).getValues().get(0).doubleValue());
-        list.add(metDAO.getMetWeather().getProperties().getTimeseries().get(25).getData().getInstant().getDetails().getAirTemperature().doubleValue());
-        list.add(waDAO.getWaWeather().getForecast().getForecastday().get(1).getHour().get(hour).getTempC().doubleValue());
+        list.add(smhiDAO.getNextDayTemperature());
+        list.add(metDAO.getNextDayTemperature());
+        list.add(waDAO.getNextDayTemperature());
         return Collections.max(list);
     }
 
     public Double getNextDayHumidity() {
-        Integer hour = LocalTime.now().getHour();
         List<Double> list = new ArrayList<>();
-        list.add(smhiDAO.getSmhiWeather().getTimeSeries().get(24).getParameters().get(5).getValues().get(0).doubleValue());
-        list.add(metDAO.getMetWeather().getProperties().getTimeseries().get(25).getData().getInstant().getDetails().getRelativeHumidity().doubleValue());
-        list.add(waDAO.getWaWeather().getForecast().getForecastday().get(1).getHour().get(hour).getHumidity().doubleValue());
+        list.add(smhiDAO.getNextDayHumidity());
+        list.add(metDAO.getNextDayHumidity());
+        list.add(waDAO.getNextDayHumidity());
         return Math.round(list.stream().mapToDouble((x) -> x).summaryStatistics().getAverage() * 10) / 10.0;
     }
 
@@ -50,17 +48,12 @@ public class WebService {
     }
 
     public Forecast getForecast() {
-        Integer hour = LocalTime.now().getHour();
         String date = LocalDate.now().toString();
         String time = LocalTime.parse(LocalTime.now().toString()).truncatedTo( ChronoUnit.MINUTES).toString();
 
-        SmhiWeather smhiWeather = smhiDAO.getSmhiWeather();
-        MetWeather metWeather = metDAO.getMetWeather();
-        WaWeather waWeather = waDAO.getWaWeather();
-
-        Double dSmhi = smhiWeather.getTimeSeries().get(24).getParameters().get(1).getValues().get(0).doubleValue();
-        Double dMet = metWeather.getProperties().getTimeseries().get(25).getData().getInstant().getDetails().getAirTemperature().doubleValue();
-        Double dWa = waWeather.getForecast().getForecastday().get(1).getHour().get(hour).getTempC().doubleValue();
+        Double dSmhi = smhiDAO.getNextDayTemperature();
+        Double dMet = metDAO.getNextDayTemperature();
+        Double dWa = waDAO.getNextDayTemperature();
 
         Double highestTemp = Collections.max(List.of(dSmhi, dMet, dWa));
         String source = "";
@@ -69,15 +62,15 @@ public class WebService {
 
         if (highestTemp.equals(dWa)) {
             source = "WeatherAPI.com";
-            humidity = waWeather.getForecast().getForecastday().get(1).getHour().get(hour).getHumidity().doubleValue();
+            humidity = waDAO.getNextDayHumidity();
         }
         if (highestTemp.equals(dMet)) {
             source = "MET.no";
-            humidity = metWeather.getProperties().getTimeseries().get(25).getData().getInstant().getDetails().getRelativeHumidity().doubleValue();
+            humidity = metDAO.getNextDayHumidity();
         }
         if (highestTemp.equals(dSmhi)) {
             source = "SMHI.se";
-            humidity = smhiWeather.getTimeSeries().get(24).getParameters().get(5).getValues().get(0).doubleValue();
+            humidity = smhiDAO.getNextDayHumidity();
         }
         return new Forecast(source, highestTemp, humidity, timestamp);
     }
