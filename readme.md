@@ -1,6 +1,6 @@
 # Weather Web Service
 
-Assignment for course in Web Services
+### Assignment for course in Web Services
 
 ***  
 ### Instructions for Web
@@ -11,3 +11,6 @@ Assignment for course in Web Services
 ### Instructions for REST
 
 1. go to localhost:8080/rs/forecast
+***  
+
+![alt text](/weather-web-service.png)
