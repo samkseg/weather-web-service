@@ -3,6 +3,10 @@
 Assignment for course in Web Services
 
 ***  
+## Description
+Compares weather forecasts from SMHI, MET and WeatherAPI, presents the forecast with the highest temperature as a web page and REST-service.
+
+***
 ### Instructions for Web
 
 1. run app
@@ -11,9 +15,5 @@ Assignment for course in Web Services
 ### Instructions for REST
 
 1. go to localhost:8080/rs/forecast
-***  
-### Description
-
-Compares weather forecasts from SMHI, MET and WeatherAPI, presents the forecast with highest temperature.
 ***
 ![alt text](/weather-web-service.png)
